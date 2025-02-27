@@ -1,8 +1,9 @@
 {
     "image": "library/telegraf",
-    "digest": "sha256:a02d841414888879b5b594dad8c9f8f9352e2c2712ae5eb42467644a695838c3",
+    "digest": "sha256:c8dfb65adbfbd9bb3b911f8fb8a85140c72a22e602104d9dbd970d350450ee3b",
     "tags": [
         "latest",
+        "1.33.3",
         "1.33"
     ]
 }
