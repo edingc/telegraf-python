@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'image.json'
+      - '*image.json'
 
 env:
   # github.repository as <account>/<repo>
