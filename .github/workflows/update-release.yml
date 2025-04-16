@@ -19,9 +19,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -30,6 +28,8 @@ jobs:
         
       - name: Commit the change if necessary
         uses: stefanzweifel/git-auto-commit-action@v5
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           # Optional. Commit message for the created commit.
           # Defaults to "Apply automatic changes"
