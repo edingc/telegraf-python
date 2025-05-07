@@ -22,6 +22,8 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Write the image details to the workspace
         run: python3 helpers/fetch-latest-image.py > image.json
