@@ -2,10 +2,53 @@
 
 import urllib.request
 import json
+import random
 from typing import Optional
 
+def get_random_user_agent() -> str:
+    """
+    Returns a random User-Agent string from real browsers (Chrome, Firefox, Safari).
 
-def get_image_tags(repository: str, page_size: Optional[int] = 10) -> str:
+    The function generates realistic User-Agent strings that emulate genuine browsers
+    across different operating systems and versions.
+
+    Returns:
+        str: A random User-Agent string.
+    """
+
+    # Example OS and browser version data
+    chrome_versions = ["121.0.6167.140", "122.0.6261.69", "123.0.6312.86"]
+    firefox_versions = ["123.0", "124.0", "125.0"]
+    safari_versions = ["17.3", "17.4", "17.5"]
+    mac_versions = ["13_4", "13_5", "14_0"]
+    windows_versions = ["10.0; Win64; x64", "11.0; Win64; x64"]
+
+    # Choose a browser at random
+    browser = random.choice(["chrome", "firefox", "safari"])
+
+    if browser == "chrome":
+        ua = (
+            f"Mozilla/5.0 (Windows NT {random.choice(windows_versions)}) "
+            f"AppleWebKit/537.36 (KHTML, like Gecko) "
+            f"Chrome/{random.choice(chrome_versions)} Safari/537.36"
+        )
+
+    elif browser == "firefox":
+        ua = (
+            f"Mozilla/5.0 (Windows NT {random.choice(windows_versions)}; rv:{random.choice(firefox_versions)}) "
+            f"Gecko/20100101 Firefox/{random.choice(firefox_versions)}"
+        )
+
+    else:  # Safari
+        ua = (
+            f"Mozilla/5.0 (Macintosh; Intel Mac OS X {random.choice(mac_versions)}) "
+            f"AppleWebKit/605.1.15 (KHTML, like Gecko) "
+            f"Version/{random.choice(safari_versions)} Safari/605.1.15"
+        )
+
+    return ua
+
+def get_image_tags(repository: str, user_agent: str, page_size: Optional[int] = 10) -> str:
     """
     Returns a JSON string of available images from Docker Hub.
 
@@ -26,8 +69,15 @@ def get_image_tags(repository: str, page_size: Optional[int] = 10) -> str:
         
         url = f"https://hub.docker.com/v2/repositories/{repository}/tags?&page_size={page_size}"
         
+        req = urllib.request.Request(url, 
+            data=None,
+            headers={
+                'User-Agent': user_agent
+                }
+        )
+
         # Make a GET request and fetch the response
-        with urllib.request.urlopen(url) as response:
+        with urllib.request.urlopen(req) as response:
             # Read and decode the response
             data = response.read().decode()
 
@@ -89,7 +139,8 @@ if __name__ == "__main__":
 
     image = "library/telegraf"
 
-    json_data = get_image_tags(image)
+    user_agent = get_random_user_agent()
+    json_data = get_image_tags(image, user_agent)
     latest_sha = get_latest_digest(json_data)
     tags = get_tags_by_digest(json_data, latest_sha)
     
